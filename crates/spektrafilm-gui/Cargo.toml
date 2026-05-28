@@ -1,0 +1,43 @@
+[package]
+name = "spektrafilm-gui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "spektrafilm-gui"
+path = "src/main.rs"
+
+[features]
+precision-f64 = [
+    "spektrafilm-math/precision-f64",
+    "spektrafilm-core/precision-f64",
+    "spektrafilm-gpu/precision-f64",
+]
+
+[dependencies]
+spektrafilm-core.workspace = true
+spektrafilm-gpu.workspace = true
+spektrafilm-math.workspace = true
+eframe.workspace = true
+egui.workspace = true
+image.workspace = true
+anyhow.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+rfd = "0.15"
+rayon.workspace = true
+imagepipe = "0.5"
+rawloader = "0.37"
+rawler = "0.7"
+raw-window-handle = "0.6"
+
+# macOS-only: tag the CAMetalLayer's colorspace as sRGB so the OS
+# colour-manages the window correctly on wide-gamut external displays.
+# Without this, the framebuffer is treated as raw display primaries and
+# sRGB content is rendered into the wider gamut → oversaturated reds.
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.5"
+core-graphics = "0.24"
+foreign-types = "0.5"

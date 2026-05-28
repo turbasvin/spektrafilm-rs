@@ -1,0 +1,33 @@
+[package]
+name = "spektrafilm-gpu"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[features]
+default = ["wgpu-backend"]
+wgpu-backend = ["dep:wgpu"]
+precision-f64 = ["spektrafilm-math/precision-f64"]
+
+[dependencies]
+spektrafilm-math.workspace = true
+rayon.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+wgpu = { workspace = true, optional = true, features = ["wgsl"] }
+bytemuck = { version = "1.25", features = ["derive"] }
+pollster = "0.4"
+# Native BLAS for CPU spectral integration — matches numpy's
+# Accelerate-backed einsum bit-exactly on macOS, OpenBLAS elsewhere.
+cblas = "0.4"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+blas-src = { version = "0.10", features = ["accelerate"] }
+accelerate-src = "0.3"
+
+[target.'cfg(not(target_os = "macos"))'.dependencies]
+blas-src = { version = "0.10", features = ["openblas"] }
+openblas-src = "0.10"
+
+[dev-dependencies]
+tracing-subscriber = { workspace = true }
